@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="VarKai" />
+	
+	
+	
+	<title>Shortest Path Problems ｜ Noob Town</title>
+	
+    
+    
+    <meta name="description" content="Single source Non-negative weighted graph &amp;ndash; Dijkstra Algorithm  Why does it work?  greedy algorithm    Naive Approach  Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes Space complexity: $O(V^2)$, adjacent matrix Suitable for dense graph  Use adjacent matrix to represent graph compared to queue-based approach, it avoids complexity incurred by large amount of edges    Example: 743. Network Delay Time
+func networkDelayTime(times [][]int, N int, K int) int { // N will be in the range [1, 100].  // K will be in the range [1, N]." />
+    
+
+    
+    
+    <meta name="keywords" content="blog, tacticalmixtu, noob town" />
+    
+
+	
+    
+    <link rel="shortcut icon" href="https://eincorgi.com/images/favicon.ico" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="https://eincorgi.com/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="https://eincorgi.com/css/zozo.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="https://eincorgi.com/css/highlight.css" />
+
+    
+    
+</head>
+
+<body>
+    <div class="main animate__animated animate__fadeInDown">
+        <div class="nav_container animated fadeInDown">
+    <div class="site_nav" id="site_nav">
+        <ul>
+            
+            <li>
+                <a href="/">Home</a>
+            </li>
+            
+            <li>
+                <a href="/posts/">Archive</a>
+            </li>
+            
+            <li>
+                <a href="/tags/">Tags</a>
+            </li>
+            
+            <li>
+                <a href="/about/">About</a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="menu_icon">
+        <a id="menu_icon"><i class="ri-menu-line"></i></a>
+    </div>
+</div>
+        <div class="header animated fadeInDown">
+    <div class="site_title_container">
+        <div class="site_title">
+            <h1>
+                <a href="https://eincorgi.com/">
+                    <span>Noob Town</span>
+                </a>
+            </h1>
+        </div>
+        <div class="description">
+            <p class="sub_title">高高山顶立, 深深海底行</p>
+            <div class="my_socials">
+                
+                
+                <a href="https://github.com/tacticalmixtu" title="github" target="_blank"><i class="ri-github-fill"></i></a>
+                
+                
+                
+                <a href="https://twitter.com/tacticalmixtu" title="twitter" target="_blank"><i class="ri-twitter-fill"></i></a>
+                
+                
+                <a href="https://eincorgi.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i
+                        class="ri-rss-fill"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="content">
+            <div class="post_page">
+                <div class="post animate__animated animate__fadeInDown">
+                    <div class="post_title post_detail_title">
+                        <h2><a href='/posts/1-shortest/'>Shortest Path Problems</a></h2>
+                        <span class="date">2020.08.26</span>
+                    </div>
+                    <div class="post_content markdown"><h2 id="single-source">Single source</h2>
+<h3 id="non-negative-weighted-graph----dijkstra-algorithm">Non-negative weighted graph &ndash; Dijkstra Algorithm</h3>
+<ul>
+<li>Why does it work?
+<ul>
+<li>greedy algorithm</li>
+</ul>
+</li>
+</ul>
+<h4 id="naive-approach">Naive Approach</h4>
+<ul>
+<li>Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes</li>
+<li>Space complexity: $O(V^2)$, adjacent matrix</li>
+<li>Suitable for <em>dense graph</em>
+<ul>
+<li>Use adjacent matrix to represent graph</li>
+<li>compared to queue-based approach, it avoids complexity incurred by large amount of edges</li>
+</ul>
+</li>
+</ul>
+<p>Example: <a href="https://leetcode.com/problems/network-delay-time/">743. Network Delay Time</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="kd">func</span> <span class="nf">networkDelayTime</span><span class="p">(</span><span class="nx">times</span> <span class="p">[][]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">N</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">K</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// N will be in the range [1, 100].
+</span><span class="c1"></span>    <span class="c1">// K will be in the range [1, N].
+</span><span class="c1"></span>    <span class="c1">// The length of times will be in the range [1, 6000].
+</span><span class="c1"></span>    <span class="c1">// All edges times[i] = (u, v, w) will have 1 &lt;= u, v &lt;= N and 0 &lt;= w &lt;= 100.
+</span><span class="c1"></span>
+    <span class="c1">// create adjacent matrix
+</span><span class="c1"></span>    <span class="nx">graph</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">graph</span> <span class="p">{</span>
+        <span class="nx">graph</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">N</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">graph</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">{</span>
+            <span class="c1">// -1 means unreachable
+</span><span class="c1"></span>            <span class="c1">// graph[i][j] = -1
+</span><span class="c1"></span>            <span class="nx">graph</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">times</span> <span class="p">{</span>
+        <span class="nx">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">weight</span> <span class="o">:=</span> <span class="nx">times</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">times</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">times</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="nx">graph</span><span class="p">[</span><span class="nx">from</span><span class="p">][</span><span class="nx">to</span><span class="p">]</span> <span class="p">=</span> <span class="nx">weight</span>
+    <span class="p">}</span>
+
+    <span class="c1">// distance[i]: distance of (K,i)
+</span><span class="c1"></span>    <span class="c1">// given K is k-th, but we use it as index to denote node
+</span><span class="c1"></span>    <span class="nx">K</span><span class="o">--</span>
+    <span class="nx">distance</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">graph</span><span class="p">[</span><span class="nx">K</span><span class="p">]</span> <span class="p">{</span>
+        <span class="nx">distance</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">graph</span><span class="p">[</span><span class="nx">K</span><span class="p">][</span><span class="nx">i</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="nx">distance</span><span class="p">[</span><span class="nx">K</span><span class="p">]</span> <span class="p">=</span> <span class="mi">0</span>
+
+    <span class="nx">visited</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">N</span><span class="p">)</span>
+    <span class="nx">visited</span><span class="p">[</span><span class="nx">K</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+
+    <span class="c1">// iterate at most N-1 loops for all nodes expect K
+</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">N</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">localMin</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span>
+        <span class="c1">// find the selected node in Q (un-explored) region with smallest distance (K,selected)
+</span><span class="c1"></span>        <span class="kd">var</span> <span class="nx">selected</span> <span class="kt">int</span>
+        <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="p">&lt;</span> <span class="nx">N</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">!</span><span class="nx">visited</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">&lt;</span> <span class="nx">localMin</span> <span class="p">{</span>
+                <span class="nx">localMin</span> <span class="p">=</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span>
+                <span class="nx">selected</span> <span class="p">=</span> <span class="nx">j</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="c1">// now selected node is added into P(explored) region
+</span><span class="c1"></span>        <span class="nx">visited</span><span class="p">[</span><span class="nx">selected</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+        <span class="c1">// now could relax all out edges of selected node
+</span><span class="c1"></span>        <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">graph</span><span class="p">[</span><span class="nx">selected</span><span class="p">]</span> <span class="p">{</span>
+            <span class="c1">// must skip unreachable edges, otherwise could cause overflow in next addition operation: distance[selected]+graph[selected][j]
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">graph</span><span class="p">[</span><span class="nx">selected</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">==</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span> <span class="p">{</span>
+                <span class="k">continue</span>
+            <span class="p">}</span>
+            <span class="c1">// for (K,j), take a detour if (K,j) &gt; (K,selected) + (selected,j)
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">selected</span><span class="p">]</span><span class="o">+</span><span class="nx">graph</span><span class="p">[</span><span class="nx">selected</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="p">&lt;</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">{</span>
+                <span class="nx">distance</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">selected</span><span class="p">]</span> <span class="o">+</span> <span class="nx">graph</span><span class="p">[</span><span class="nx">selected</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">max</span> <span class="kt">int</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">dis</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">distance</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nx">dis</span> <span class="p">&gt;</span> <span class="nx">max</span> <span class="p">{</span>
+            <span class="nx">max</span> <span class="p">=</span> <span class="nx">dis</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// unreachable nodes from K exists
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">max</span> <span class="o">==</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">max</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="queue-based-approach">Queue-based Approach</h4>
+<ul>
+<li>Time complexity: $O(ElogV)$, based on implementation of heap</li>
+<li>Space complexity</li>
+<li>Suitable for <em>sparse graph</em>:
+<ul>
+<li>use adjacent list to represent graph</li>
+</ul>
+</li>
+</ul>
+<p>Example: <a href="https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid/">1368. Minimum Cost to Make at Least One Valid Path in a Grid</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="kd">func</span> <span class="nf">minCost</span><span class="p">(</span><span class="nx">grid</span> <span class="p">[][]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// simulate a graph with weighted edge computed from sign of each cell
+</span><span class="c1"></span>
+    <span class="c1">// corresponding to 1,2,3,4 and left, right, down, up
+</span><span class="c1"></span>    <span class="nx">rowDir</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+    <span class="nx">colDir</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="c1">// m == grid.length
+</span><span class="c1"></span>    <span class="c1">// n == grid[i].length
+</span><span class="c1"></span>    <span class="c1">// 1 &lt;= m, n &lt;= 100
+</span><span class="c1"></span>    <span class="nx">m</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">grid</span><span class="p">)</span>
+    <span class="nx">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="nx">distance</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">n</span><span class="o">*</span><span class="nx">m</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">distance</span> <span class="p">{</span>
+        <span class="nx">distance</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span>
+    <span class="p">}</span>
+    <span class="nx">distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">0</span>
+
+    <span class="nx">visited</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">bool</span><span class="p">,</span> <span class="nx">n</span><span class="o">*</span><span class="nx">m</span><span class="p">)</span>
+    <span class="c1">// do not mark source as visited since we only mark it once we finish accessing all its adjacent cells
+</span><span class="c1"></span>    <span class="c1">// visited[0]= true
+</span><span class="c1"></span>
+    <span class="nx">h</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">minHeap</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">}}</span>
+    <span class="nx">heap</span><span class="p">.</span><span class="nf">Init</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">h</span><span class="p">.</span><span class="nf">Len</span><span class="p">()</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="nx">p</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">heap</span><span class="p">.</span><span class="nf">Pop</span><span class="p">(</span><span class="nx">h</span><span class="p">).(</span><span class="o">*</span><span class="nx">node</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+            <span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="nx">visited</span><span class="p">[</span><span class="nx">p</span><span class="p">.</span><span class="nx">label</span><span class="p">]</span> <span class="p">{</span>
+            <span class="k">continue</span>
+        <span class="p">}</span>
+        <span class="nx">visited</span><span class="p">[</span><span class="nx">p</span><span class="p">.</span><span class="nx">label</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+
+        <span class="nx">currentRow</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">label</span> <span class="o">/</span> <span class="nx">n</span>
+        <span class="nx">currentCol</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">label</span> <span class="o">%</span> <span class="nx">n</span>
+        <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">rowDir</span> <span class="p">{</span>
+            <span class="nx">newRow</span> <span class="o">:=</span> <span class="nx">currentRow</span> <span class="o">+</span> <span class="nx">rowDir</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+            <span class="nx">newCol</span> <span class="o">:=</span> <span class="nx">currentCol</span> <span class="o">+</span> <span class="nx">colDir</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nx">newRow</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">newRow</span> <span class="o">&gt;=</span> <span class="nx">m</span> <span class="o">||</span> <span class="nx">newCol</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">newCol</span> <span class="o">&gt;=</span> <span class="nx">n</span> <span class="p">{</span>
+                <span class="k">continue</span>
+            <span class="p">}</span>
+            <span class="nx">newLabel</span> <span class="o">:=</span> <span class="nx">newRow</span><span class="o">*</span><span class="nx">n</span> <span class="o">+</span> <span class="nx">newCol</span>
+            <span class="nx">newDistance</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">distanceTo</span>
+            <span class="c1">// cost of chaning sign
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">grid</span><span class="p">[</span><span class="nx">currentRow</span><span class="p">][</span><span class="nx">currentCol</span><span class="p">]</span> <span class="o">!=</span> <span class="nx">i</span><span class="o">+</span><span class="mi">1</span> <span class="p">{</span>
+                <span class="nx">newDistance</span><span class="o">++</span>
+            <span class="p">}</span>
+            <span class="c1">// relax
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">newDistance</span> <span class="p">&lt;</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">newLabel</span><span class="p">]</span> <span class="p">{</span>
+                <span class="nx">distance</span><span class="p">[</span><span class="nx">newLabel</span><span class="p">]</span> <span class="p">=</span> <span class="nx">newDistance</span>
+                <span class="nx">heap</span><span class="p">.</span><span class="nf">Push</span><span class="p">(</span><span class="nx">h</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">node</span><span class="p">{</span><span class="nx">newDistance</span><span class="p">,</span> <span class="nx">newLabel</span><span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// there must be a valid path
+</span><span class="c1"></span>    <span class="k">return</span> <span class="nx">distance</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">distance</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="negative-weighted-graph----bellman-ford-algorithm">Negative weighted graph &ndash; Bellman-Ford Algorithm</h3>
+<p>Time: $O(V^2)$</p>
+<p>Example: <a href="https://leetcode.com/problems/cheapest-flights-within-k-stops/">787. Cheapest Flights Within K Stops</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="kd">func</span> <span class="nf">findCheapestPrice</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">flights</span> <span class="p">[][]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">src</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">dst</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">K</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// The number of nodes n will be in range [1, 100], with nodes labeled from 0 to n - 1.
+</span><span class="c1"></span>    <span class="c1">// The size of flights will be in range [0, n * (n - 1) / 2].
+</span><span class="c1"></span>    <span class="c1">// There will not be any duplicated flights or self cycles.
+</span><span class="c1"></span>
+    <span class="c1">// n vertices and m edges
+</span><span class="c1"></span>    <span class="nx">distance</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">distance</span> <span class="p">{</span>
+        <span class="c1">// The price of each flight will be in the range [1, 10000].
+</span><span class="c1"></span>        <span class="c1">// maxint32 implies unreachable
+</span><span class="c1"></span>        <span class="nx">distance</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span>
+    <span class="p">}</span>
+    <span class="nx">distance</span><span class="p">[</span><span class="nx">src</span><span class="p">]</span> <span class="p">=</span> <span class="mi">0</span>
+
+    <span class="c1">// k is in the range of [0, n - 1].
+</span><span class="c1"></span>    <span class="c1">// at most K stops, means at most K+2 vertices on path
+</span><span class="c1"></span>    <span class="c1">// therefore require K iterations
+</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">K</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">currentDistance</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">distance</span><span class="p">))</span>
+        <span class="nb">copy</span><span class="p">(</span><span class="nx">currentDistance</span><span class="p">,</span> <span class="nx">distance</span><span class="p">)</span>
+        <span class="c1">// relax all edges
+</span><span class="c1"></span>        <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">flights</span> <span class="p">{</span>
+            <span class="c1">// The format of each flight will be (src, dst, price).
+</span><span class="c1"></span>            <span class="nx">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">weight</span> <span class="o">:=</span> <span class="nx">flights</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nx">flights</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nx">flights</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nx">currentDistance</span><span class="p">[</span><span class="nx">to</span><span class="p">]</span> <span class="p">&gt;</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">from</span><span class="p">]</span><span class="o">+</span><span class="nx">weight</span> <span class="p">{</span>
+                <span class="nx">currentDistance</span><span class="p">[</span><span class="nx">to</span><span class="p">]</span> <span class="p">=</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">from</span><span class="p">]</span> <span class="o">+</span> <span class="nx">weight</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">distance</span> <span class="p">=</span> <span class="nx">currentDistance</span>
+    <span class="p">}</span>
+    <span class="c1">// check negative cycles
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">dst</span><span class="p">]</span> <span class="o">==</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">distance</span><span class="p">[</span><span class="nx">dst</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="all-pairs----floyd-warshall-algorithm">All pairs &ndash; Floyd-Warshall Algorithm</h2>
+<ul>
+<li>
+<p>To solve shortest paths problems for all pairs of vertices</p>
+<ul>
+<li>apply Dijkstra to each node, results in $O(V * E logV)$</li>
+<li>floyd, $O(V^3)$</li>
+</ul>
+</li>
+<li>
+<p>Why does it work? dynamic programming</p>
+<ul>
+<li>relax edges with constrains on detoured vertex</li>
+<li>table space reduction, since k&rsquo;s state relies only on k-1&rsquo;s state</li>
+</ul>
+</li>
+</ul>
+<p>Example: <a href="https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/">1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">findTheCity</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">edges</span> <span class="p">[][]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">distanceThreshold</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// 2 &lt;= n &lt;= 100
+</span><span class="c1"></span>    <span class="c1">// 1 &lt;= edges.length &lt;= n * (n - 1) / 2, could be dense graph
+</span><span class="c1"></span>    <span class="nx">table</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">table</span> <span class="p">{</span>
+        <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">{</span>
+            <span class="c1">// initialize to unreachable
+</span><span class="c1"></span>            <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">edges</span> <span class="p">{</span>
+        <span class="c1">// All edges are distinct.
+</span><span class="c1"></span>        <span class="c1">// edges[i].length == 3
+</span><span class="c1"></span>        <span class="nx">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">weight</span> <span class="o">:=</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1">// directly connected
+</span><span class="c1"></span>        <span class="nx">table</span><span class="p">[</span><span class="nx">from</span><span class="p">][</span><span class="nx">to</span><span class="p">]</span> <span class="p">=</span> <span class="nx">weight</span>
+        <span class="nx">table</span><span class="p">[</span><span class="nx">to</span><span class="p">][</span><span class="nx">from</span><span class="p">]</span> <span class="p">=</span> <span class="nx">weight</span>
+    <span class="p">}</span>
+    <span class="c1">// k&#39;s range is [0,n], but 0 is handled in previous
+</span><span class="c1"></span>    <span class="c1">// k stays at most outer loop so that at k round, it could use k-1&#39;s table and reuse it
+</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">k</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">k</span> <span class="p">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">k</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">table</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">{</span>
+                <span class="c1">// skip self, and unreachable case to avoid integer overflow
+</span><span class="c1"></span>                <span class="k">if</span> <span class="nx">i</span> <span class="o">==</span> <span class="nx">j</span> <span class="o">||</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">k</span><span class="p">]</span> <span class="o">==</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span> <span class="o">||</span> <span class="nx">table</span><span class="p">[</span><span class="nx">k</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">==</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span> <span class="p">{</span>
+                    <span class="k">continue</span>
+                <span class="p">}</span>
+                <span class="c1">// relax for each i,j edge, consider to take a detour or not
+</span><span class="c1"></span>                <span class="c1">// k&#39;s table[i][j]
+</span><span class="c1"></span>                <span class="k">if</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="p">&gt;</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">k</span><span class="p">]</span><span class="o">+</span><span class="nx">table</span><span class="p">[</span><span class="nx">k</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="p">{</span>
+                    <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">k</span><span class="p">]</span> <span class="o">+</span> <span class="nx">table</span><span class="p">[</span><span class="nx">k</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// distanceThreshold &lt;= 10^4
+</span><span class="c1"></span>    <span class="nx">minCount</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">MaxInt32</span>
+    <span class="kd">var</span> <span class="nx">res</span> <span class="kt">int</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">table</span> <span class="p">{</span>
+        <span class="nx">count</span> <span class="o">:=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">table</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nx">distanceThreshold</span> <span class="p">{</span>
+                <span class="nx">count</span><span class="o">++</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="nx">count</span> <span class="o">&lt;=</span> <span class="nx">minCount</span> <span class="p">{</span>
+            <span class="nx">minCount</span> <span class="p">=</span> <span class="nx">count</span>
+            <span class="nx">res</span> <span class="p">=</span> <span class="nx">i</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">res</span>
+<span class="p">}</span>
+</code></pre></div></div>
+                    <div class="post_footer">
+                        
+                        <div class="meta">
+                            <div class="info">
+                                <span class="field tags">
+                                    <i class="ri-stack-line"></i>
+                                    
+                                    <a href="https://eincorgi.com/tags/algorithms/">Algorithms</a>
+                                    
+                                </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                <div class="doc_comments"></div>
+                
+            </div>
+        </div>
+    </div>
+    <a id="back_to_top" href="#" class="back_to_top"><i class="ri-arrow-up-s-line"></i></a>
+    <footer class="footer">
+    <div class="powered_by">
+        <a href="https://varkai.com">Designed by VarKai,</a>
+        <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+    </div>
+
+    <div class="footer_slogan">
+        <span>沉默归宿</span>
+    </div>
+</footer>
+    <script src="https://eincorgi.com/js/jquery-3.5.1.min.js"></script>
+<link href="https://eincorgi.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://eincorgi.com/js/fancybox.min.js"></script>
+<script src="https://eincorgi.com/js/zozo.js"></script>
+
+
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style>
+
+
+
+</body>
+
+</html>
