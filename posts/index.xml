@@ -2,21 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Noob Town</title>
-    <link>https://tacticalmixtu.github.io/posts/</link>
+    <link>https://eincorgi.com/posts/</link>
     <description>Recent content in Posts on Noob Town</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 26 Aug 2020 17:59:33 -0400</lastBuildDate>
-    
-	<atom:link href="https://tacticalmixtu.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 26 Aug 2020 17:59:33 -0400</lastBuildDate><atom:link href="https://eincorgi.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Shortest Path Problems</title>
-      <link>https://tacticalmixtu.github.io/posts/1-shortest/</link>
+      <link>https://eincorgi.com/posts/1-shortest/</link>
       <pubDate>Wed, 26 Aug 2020 17:59:33 -0400</pubDate>
       
-      <guid>https://tacticalmixtu.github.io/posts/1-shortest/</guid>
+      <guid>https://eincorgi.com/posts/1-shortest/</guid>
       <description>Single source Non-negative weighted graph &amp;ndash; Dijkstra Algorithm  Why does it work?  greedy algorithm    Naive Approach  Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes Space complexity: $O(V^2)$, adjacent matrix Suitable for dense graph  Use adjacent matrix to represent graph compared to queue-based approach, it avoids complexity incurred by large amount of edges    Example: 743. Network Delay Time
 func networkDelayTime(times [][]int, N int, K int) int { // N will be in the range [1, 100].  // K will be in the range [1, N].</description>
     </item>
