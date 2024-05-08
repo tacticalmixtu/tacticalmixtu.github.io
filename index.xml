@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>my blog</title>
+    <title>works.collection</title>
     <link>https://tacticalmixtu.github.io/</link>
-    <description>Recent content on my blog</description>
+    <description>Recent content on works.collection</description>
     <generator>Hugo -- 0.125.6</generator>
     <language>en-us</language>
     <copyright>PaperMod Contributors</copyright>
@@ -71,7 +71,7 @@ Why do we need it reduce duplication of data avoid data anomalies ensure referen
       <link>https://tacticalmixtu.github.io/about/</link>
       <pubDate>Wed, 26 Aug 2020 20:26:06 -0400</pubDate>
       <guid>https://tacticalmixtu.github.io/about/</guid>
-      <description> Bachelor: Software Engineering @Qingdao University Master: Computer Science @Syracuse University Software Engineer: Golang Backend @Baidu </description>
+      <description> Bachelor: Software Engineering @Qingdao University Master: Computer Science @Syracuse University Software Engineer: Golang server-side SDE@Baidu </description>
     </item>
     <item>
       <title>Shortest Path Problems</title>
