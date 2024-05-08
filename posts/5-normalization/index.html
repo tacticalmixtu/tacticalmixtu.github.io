@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Normalization | my blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="What is Normalization Normalization is a database scheme design approach for relational databases.
+Why do we need it reduce duplication of data avoid data anomalies ensure referential integrity simply management Data anomalies what is data anomalies data does not match with real situation why caused by redundancy of data what types update anomalies integrity is tampered among different tables insertion anomalies paradoxical situation deletion anomalies desired data is deleted accidentally as well Referential integrity When a foreign key is used, it must reference a valid, existing primary key in parent table.">
+<meta name="author" content="">
+<link rel="canonical" href="https://tacticalmixtu.github.io/posts/5-normalization/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://tacticalmixtu.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tacticalmixtu.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tacticalmixtu.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://tacticalmixtu.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://tacticalmixtu.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://tacticalmixtu.github.io/posts/5-normalization/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  
+
+<meta property="og:title" content="Normalization" />
+<meta property="og:description" content="What is Normalization Normalization is a database scheme design approach for relational databases.
+Why do we need it reduce duplication of data avoid data anomalies ensure referential integrity simply management Data anomalies what is data anomalies data does not match with real situation why caused by redundancy of data what types update anomalies integrity is tampered among different tables insertion anomalies paradoxical situation deletion anomalies desired data is deleted accidentally as well Referential integrity When a foreign key is used, it must reference a valid, existing primary key in parent table." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tacticalmixtu.github.io/posts/5-normalization/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-11-07T22:15:26+08:00" />
+<meta property="article:modified_time" content="2020-11-07T22:15:26+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Normalization"/>
+<meta name="twitter:description" content="What is Normalization Normalization is a database scheme design approach for relational databases.
+Why do we need it reduce duplication of data avoid data anomalies ensure referential integrity simply management Data anomalies what is data anomalies data does not match with real situation why caused by redundancy of data what types update anomalies integrity is tampered among different tables insertion anomalies paradoxical situation deletion anomalies desired data is deleted accidentally as well Referential integrity When a foreign key is used, it must reference a valid, existing primary key in parent table."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://tacticalmixtu.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Normalization",
+      "item": "https://tacticalmixtu.github.io/posts/5-normalization/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Normalization",
+  "name": "Normalization",
+  "description": "What is Normalization Normalization is a database scheme design approach for relational databases.\nWhy do we need it reduce duplication of data avoid data anomalies ensure referential integrity simply management Data anomalies what is data anomalies data does not match with real situation why caused by redundancy of data what types update anomalies integrity is tampered among different tables insertion anomalies paradoxical situation deletion anomalies desired data is deleted accidentally as well Referential integrity When a foreign key is used, it must reference a valid, existing primary key in parent table.",
+  "keywords": [
+    
+  ],
+  "articleBody": "What is Normalization Normalization is a database scheme design approach for relational databases.\nWhy do we need it reduce duplication of data avoid data anomalies ensure referential integrity simply management Data anomalies what is data anomalies data does not match with real situation why caused by redundancy of data what types update anomalies integrity is tampered among different tables insertion anomalies paradoxical situation deletion anomalies desired data is deleted accidentally as well Referential integrity When a foreign key is used, it must reference a valid, existing primary key in parent table.\nHow to enforce Normalization Formula 1NF single value in each column unique record 2NF satisfy 1NF single column primary key 3NF satisfy 2NF No transitive functional dependency ",
+  "wordCount" : "118",
+  "inLanguage": "en",
+  "datePublished": "2020-11-07T22:15:26+08:00",
+  "dateModified": "2020-11-07T22:15:26+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tacticalmixtu.github.io/posts/5-normalization/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "my blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tacticalmixtu.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://tacticalmixtu.github.io/" accesskey="h" title="my blog (Alt + H)">my blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Normalization
+    </h1>
+    <div class="post-meta"><span title='2020-11-07 22:15:26 +0800 CST'>November 7, 2020</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="what-is-normalization">What is Normalization<a hidden class="anchor" aria-hidden="true" href="#what-is-normalization">#</a></h2>
+<p><strong>Normalization</strong> is a database scheme design approach for <em>relational databases</em>.</p>
+<h2 id="why-do-we-need-it">Why do we need it<a hidden class="anchor" aria-hidden="true" href="#why-do-we-need-it">#</a></h2>
+<ul>
+<li>reduce <em>duplication</em> of data</li>
+<li>avoid <em>data anomalies</em></li>
+<li>ensure <em>referential integrity</em></li>
+<li>simply <em>management</em></li>
+</ul>
+<h3 id="data-anomalies">Data anomalies<a hidden class="anchor" aria-hidden="true" href="#data-anomalies">#</a></h3>
+<ul>
+<li>what is data anomalies
+<ul>
+<li>data <em>does not match</em> with real situation</li>
+</ul>
+</li>
+<li>why
+<ul>
+<li>caused by <em>redundancy</em> of data</li>
+</ul>
+</li>
+<li>what types
+<ul>
+<li>update anomalies
+<ul>
+<li>integrity is tampered among different tables</li>
+</ul>
+</li>
+<li>insertion anomalies
+<ul>
+<li>paradoxical situation</li>
+</ul>
+</li>
+<li>deletion anomalies
+<ul>
+<li>desired data is deleted accidentally as well</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="referential-integrity">Referential integrity<a hidden class="anchor" aria-hidden="true" href="#referential-integrity">#</a></h3>
+<p>When a <strong>foreign key</strong> is used, it <em>must reference</em> a valid, existing primary key in parent table.</p>
+<h2 id="how-to-enforce-normalization-formula">How to enforce Normalization Formula<a hidden class="anchor" aria-hidden="true" href="#how-to-enforce-normalization-formula">#</a></h2>
+<ul>
+<li>1NF
+<ul>
+<li>single value in each column</li>
+<li>unique record</li>
+</ul>
+</li>
+<li>2NF
+<ul>
+<li>satisfy 1NF</li>
+<li>single column primary key</li>
+</ul>
+</li>
+<li>3NF
+<ul>
+<li>satisfy 2NF</li>
+<li>No <strong>transitive functional dependency</strong></li>
+</ul>
+</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© <a href="https://github.com/adityatelange/hugo-PaperMod/graphs/contributors">PaperMod Contributors</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

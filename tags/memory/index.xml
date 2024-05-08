@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Memory on my blog</title>
+    <link>https://tacticalmixtu.github.io/tags/memory/</link>
+    <description>Recent content in Memory on my blog</description>
+    <generator>Hugo -- 0.125.6</generator>
+    <language>en-us</language>
+    <copyright>PaperMod Contributors</copyright>
+    <lastBuildDate>Fri, 23 Apr 2021 20:17:17 +0800</lastBuildDate>
+    <atom:link href="https://tacticalmixtu.github.io/tags/memory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>12 Go_memory</title>
+      <link>https://tacticalmixtu.github.io/posts/12-go_memory/</link>
+      <pubDate>Fri, 23 Apr 2021 20:17:17 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/12-go_memory/</guid>
+      <description>Memory Model Each go routine is assigned a stack with an initial space of 2KB Each function is assigned as frame a function could only access memory directly within that frame function call creates a new frame(below the calling function, since frames lay in a stack which grows down, from high address to low address) clean up that space invalid deliminator is moved downside passed by value array parameter is regarded pretty same as an int pass by value applies for both function call and return function return invalid deliminator is moved upward cleanup operation is done during function call to save time Escape analysis Escape analysis is the process that the compiler uses to determine the placement of values that are created by your program.</description>
+    </item>
+  </channel>
+</rss>

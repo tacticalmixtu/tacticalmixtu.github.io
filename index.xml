@@ -1,30 +1,84 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Noob Town</title>
+    <title>my blog</title>
     <link>https://tacticalmixtu.github.io/</link>
-    <description>Recent content on Noob Town</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Wed, 26 Aug 2020 17:59:33 -0400</lastBuildDate><atom:link href="https://tacticalmixtu.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <description>Recent content on my blog</description>
+    <generator>Hugo -- 0.125.6</generator>
+    <language>en-us</language>
+    <copyright>PaperMod Contributors</copyright>
+    <lastBuildDate>Fri, 23 Apr 2021 20:17:17 +0800</lastBuildDate>
+    <atom:link href="https://tacticalmixtu.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>12 Go_memory</title>
+      <link>https://tacticalmixtu.github.io/posts/12-go_memory/</link>
+      <pubDate>Fri, 23 Apr 2021 20:17:17 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/12-go_memory/</guid>
+      <description>Memory Model Each go routine is assigned a stack with an initial space of 2KB Each function is assigned as frame a function could only access memory directly within that frame function call creates a new frame(below the calling function, since frames lay in a stack which grows down, from high address to low address) clean up that space invalid deliminator is moved downside passed by value array parameter is regarded pretty same as an int pass by value applies for both function call and return function return invalid deliminator is moved upward cleanup operation is done during function call to save time Escape analysis Escape analysis is the process that the compiler uses to determine the placement of values that are created by your program.</description>
+    </item>
+    <item>
+      <title>11 Byte_rune_string</title>
+      <link>https://tacticalmixtu.github.io/posts/11-byte_rune_string/</link>
+      <pubDate>Thu, 22 Apr 2021 23:46:13 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/11-byte_rune_string/</guid>
+      <description>Introduction A little history ASCII
+represents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode
+a single character set that included every reasonable writing system a letter maps to something called a code point, U+0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type</description>
+    </item>
+    <item>
+      <title>Handlers and Multiplexers in http package</title>
+      <link>https://tacticalmixtu.github.io/posts/10-handle_http/</link>
+      <pubDate>Tue, 16 Feb 2021 11:32:41 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/10-handle_http/</guid>
+      <description>This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.
+Start a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt.</description>
+    </item>
+    <item>
+      <title>How to deal with error in Go</title>
+      <link>https://tacticalmixtu.github.io/posts/7-error/</link>
+      <pubDate>Mon, 09 Nov 2020 19:46:39 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/7-error/</guid>
+      <description>Prelude Any program may fall into wrong logic paths. And Go provides two mechanisms: error and panic. Errors could be used to inspect a execution result of a function, while panic generally represents a severe problem that may crash the whole program.
+This article focus on error handling, which is a tricky yet critical part of go programming.
+A little background Inheritance from C: return a number to denote execution result Benefits from multiple return values in Go Fundamental concepts // definition of error interface type error interface { Error() string } // New returns an error that formats as the given text.</description>
+    </item>
+    <item>
+      <title>ACID</title>
+      <link>https://tacticalmixtu.github.io/posts/6-acid/</link>
+      <pubDate>Sun, 08 Nov 2020 18:28:42 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/6-acid/</guid>
+      <description>What is ACID ACID is a set of properties that a transaction must satisfy to guarantee data validity despite errors/failures
+Atomicity All changes to data are performed as if they are a single operation. That is, all the changes are performed, or none of them are.
+For example, in an application that transfers funds from one account to another, the atomicity property ensures that, if a debit is made successfully from one account, the corresponding credit is made to the other account.</description>
+    </item>
+    <item>
+      <title>Normalization</title>
+      <link>https://tacticalmixtu.github.io/posts/5-normalization/</link>
+      <pubDate>Sat, 07 Nov 2020 22:15:26 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/5-normalization/</guid>
+      <description>What is Normalization Normalization is a database scheme design approach for relational databases.
+Why do we need it reduce duplication of data avoid data anomalies ensure referential integrity simply management Data anomalies what is data anomalies data does not match with real situation why caused by redundancy of data what types update anomalies integrity is tampered among different tables insertion anomalies paradoxical situation deletion anomalies desired data is deleted accidentally as well Referential integrity When a foreign key is used, it must reference a valid, existing primary key in parent table.</description>
+    </item>
+    <item>
+      <title>Dynamic Programming</title>
+      <link>https://tacticalmixtu.github.io/posts/4-dp/</link>
+      <pubDate>Mon, 31 Aug 2020 17:47:02 -0400</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/4-dp/</guid>
+      <description>What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)</description>
+    </item>
     <item>
       <title>About Me</title>
       <link>https://tacticalmixtu.github.io/about/</link>
       <pubDate>Wed, 26 Aug 2020 20:26:06 -0400</pubDate>
-      
       <guid>https://tacticalmixtu.github.io/about/</guid>
-      <description> Bachelor: Software Engineering @Qingdao University Master(in progress): Computer Science @Syracuse University  </description>
+      <description> Bachelor: Software Engineering @Qingdao University Master: Computer Science @Syracuse University Software Engineer: Golang Backend @Baidu </description>
     </item>
-    
     <item>
       <title>Shortest Path Problems</title>
       <link>https://tacticalmixtu.github.io/posts/1-shortest/</link>
       <pubDate>Wed, 26 Aug 2020 17:59:33 -0400</pubDate>
-      
       <guid>https://tacticalmixtu.github.io/posts/1-shortest/</guid>
-      <description>Single source Non-negative weighted graph &amp;ndash; Dijkstra Algorithm  Why does it work?  greedy algorithm    Naive Approach  Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes Space complexity: $O(V^2)$, adjacent matrix Suitable for dense graph  Use adjacent matrix to represent graph compared to queue-based approach, it avoids complexity incurred by large amount of edges    Example: 743. Network Delay Time
-func networkDelayTime(times [][]int, N int, K int) int { // N will be in the range [1, 100].  // K will be in the range [1, N].</description>
+      <description>Single source Non-negative weighted graph &amp;ndash; Dijkstra Algorithm Why does it work? greedy algorithm Naive Approach Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes Space complexity: $O(V^2)$, adjacent matrix Suitable for dense graph Use adjacent matrix to represent graph compared to queue-based approach, it avoids complexity incurred by large amount of edges Example: 743. Network Delay Time</description>
     </item>
-    
   </channel>
 </rss>

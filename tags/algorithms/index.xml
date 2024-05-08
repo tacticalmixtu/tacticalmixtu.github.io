@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Algorithms on Noob Town</title>
+    <title>Algorithms on my blog</title>
     <link>https://tacticalmixtu.github.io/tags/algorithms/</link>
-    <description>Recent content in Algorithms on Noob Town</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Wed, 26 Aug 2020 17:59:33 -0400</lastBuildDate><atom:link href="https://tacticalmixtu.github.io/tags/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    <description>Recent content in Algorithms on my blog</description>
+    <generator>Hugo -- 0.125.6</generator>
+    <language>en-us</language>
+    <copyright>PaperMod Contributors</copyright>
+    <lastBuildDate>Mon, 31 Aug 2020 17:47:02 -0400</lastBuildDate>
+    <atom:link href="https://tacticalmixtu.github.io/tags/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dynamic Programming</title>
+      <link>https://tacticalmixtu.github.io/posts/4-dp/</link>
+      <pubDate>Mon, 31 Aug 2020 17:47:02 -0400</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/4-dp/</guid>
+      <description>What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)</description>
+    </item>
     <item>
       <title>Shortest Path Problems</title>
       <link>https://tacticalmixtu.github.io/posts/1-shortest/</link>
       <pubDate>Wed, 26 Aug 2020 17:59:33 -0400</pubDate>
-      
       <guid>https://tacticalmixtu.github.io/posts/1-shortest/</guid>
-      <description>Single source Non-negative weighted graph &amp;ndash; Dijkstra Algorithm  Why does it work?  greedy algorithm    Naive Approach  Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes Space complexity: $O(V^2)$, adjacent matrix Suitable for dense graph  Use adjacent matrix to represent graph compared to queue-based approach, it avoids complexity incurred by large amount of edges    Example: 743. Network Delay Time
-func networkDelayTime(times [][]int, N int, K int) int { // N will be in the range [1, 100].  // K will be in the range [1, N].</description>
+      <description>Single source Non-negative weighted graph &amp;ndash; Dijkstra Algorithm Why does it work? greedy algorithm Naive Approach Time complexity: $O(V^2)$, since outer loop would access at most V-1 nodes and inner loop would access at most V-1 nodes Space complexity: $O(V^2)$, adjacent matrix Suitable for dense graph Use adjacent matrix to represent graph compared to queue-based approach, it avoids complexity incurred by large amount of edges Example: 743. Network Delay Time</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>11 Byte_rune_string | my blog</title>
+<meta name="keywords" content="Golang, UTF-8, encoding">
+<meta name="description" content="Introduction A little history ASCII
+represents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode
+a single character set that included every reasonable writing system a letter maps to something called a code point, U&#43;0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type">
+<meta name="author" content="">
+<link rel="canonical" href="https://tacticalmixtu.github.io/posts/11-byte_rune_string/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://tacticalmixtu.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tacticalmixtu.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tacticalmixtu.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://tacticalmixtu.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://tacticalmixtu.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://tacticalmixtu.github.io/posts/11-byte_rune_string/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  
+
+<meta property="og:title" content="11 Byte_rune_string" />
+<meta property="og:description" content="Introduction A little history ASCII
+represents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode
+a single character set that included every reasonable writing system a letter maps to something called a code point, U&#43;0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tacticalmixtu.github.io/posts/11-byte_rune_string/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-04-22T23:46:13+08:00" />
+<meta property="article:modified_time" content="2021-04-22T23:46:13+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="11 Byte_rune_string"/>
+<meta name="twitter:description" content="Introduction A little history ASCII
+represents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode
+a single character set that included every reasonable writing system a letter maps to something called a code point, U&#43;0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://tacticalmixtu.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "11 Byte_rune_string",
+      "item": "https://tacticalmixtu.github.io/posts/11-byte_rune_string/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "11 Byte_rune_string",
+  "name": "11 Byte_rune_string",
+  "description": "Introduction A little history ASCII\nrepresents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode\na single character set that included every reasonable writing system a letter maps to something called a code point, U+0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type",
+  "keywords": [
+    "Golang", "UTF-8", "encoding"
+  ],
+  "articleBody": "Introduction A little history ASCII\nrepresents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode\na single character set that included every reasonable writing system a letter maps to something called a code point, U+0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type\npreserve this information about what encoding a string uses html meta tag\nGo String, a read-only slice of bytes\nit does not concern about encodings at all Go uses UTF-8 as default encoding only string literals are UTF-8, as long as they have no byte-level escapes string value, as a slice of bytes, could contain any bytes inspect a string means indexing a string accesses individual bytes, not characters\n// string contains an immutable of bytes, each byte is provided in hex const sample = \"\\xbd\\xb2\\x3d\\xbc\\x20\\xe2\\x8c\\x98\" // print out the string using default utf-8 would have weird characters since no unicode is mapped for those bytes fmt.Println(sample) // inspect the string byte by byte for i := 0; i \u003c len(sample); i++ { fmt.Printf(\"%x \", sample[i]) } // bd b2 3d bc 20 e2 8c 98 // print it with specified format fmt.Printf(\"%x\\n\", sample) // bdb23dbc20e28c98 // %q (quoted) verb will escape any non-printable byte sequences in a string so the output is unambiguous // only correct unicode would be displayed, otherwise original hex is displayed fmt.Printf(\"%q\\n\", sample) // \\xbd\\xb2=\\xbc ⌘ // %+q causes the output to escape not only non-printable sequences, but also any non-ASCII bytes, all while interpreting UTF-8 // exposes the Unicode values of properly formatted UTF-8 that represents non-ASCII data fmt.Printf(\"%+q\\n\", sample) // \\xbd\\xb2=\\xbc \\u2318 Code point, characters, runes a character(such as à) may be represented by a number of different sequences of code points, and therefore different sequences of UTF-8 bytes. For example we can use the “combining” grave accent code point, U+0300, and attach it to the lower case letter a, U+0061, to create the same character à. rune as an alias for the type int32, so programs can be clear when an integer value represents a code point.\n// A for range loop, by contrast, decodes one UTF-8-encoded rune on each iteration // Each time around the loop, the index of the loop is the starting position of the current rune, measured in bytes, and the code point is its value. const nihongo = \"日本語\" for index, runeValue := range nihongo { fmt.Printf(\"%#U starts at byte position %d\\n\", runeValue, index) } // U+65E5 '日' starts at byte position 0 // U+672C '本' starts at byte position 3 // U+8A9E '語' starts at byte position 6 // loop while validating each rune const nihongo = \"日本語\" for i, w := 0, 0; i \u003c len(nihongo); i += w { runeValue, width := utf8.DecodeRuneInString(nihongo[i:]) fmt.Printf(\"%#U starts at byte position %d\\n\", runeValue, i) w = width } ",
+  "wordCount" : "680",
+  "inLanguage": "en",
+  "datePublished": "2021-04-22T23:46:13+08:00",
+  "dateModified": "2021-04-22T23:46:13+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tacticalmixtu.github.io/posts/11-byte_rune_string/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "my blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tacticalmixtu.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://tacticalmixtu.github.io/" accesskey="h" title="my blog (Alt + H)">my blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      11 Byte_rune_string
+    </h1>
+    <div class="post-meta"><span title='2021-04-22 23:46:13 +0800 CST'>April 22, 2021</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<h2 id="a-little-history">A little history<a hidden class="anchor" aria-hidden="true" href="#a-little-history">#</a></h2>
+<ul>
+<li>
+<p><strong>ASCII</strong></p>
+<ul>
+<li>represents English characters and some other control characters only</li>
+<li>8 bits
+<ul>
+<li>only 7 bits are defined in standard</li>
+<li><em>unprintable character</em>s are below 32</li>
+<li>codes from 128 to 255 are defined in <em>a variety of way</em> by different manufactures, these different systems were called <strong>code pages</strong></li>
+<li>asian language include more characters that exceed the limit of 8 bits</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Unicode</strong></p>
+<ul>
+<li>a single character set that included every reasonable writing system</li>
+<li>a letter maps to something called a <strong>code point</strong>, <code>U+0639</code>
+<ul>
+<li>code point points to a concept, which may represents more characters</li>
+</ul>
+</li>
+<li><strong>Encodings</strong> define how to store these code points
+<ul>
+<li>store-it-in-two-byte methods are called <strong>UCS-2</strong> (because it has two bytes) or UTF-16 (because it has 16 bits)
+<ul>
+<li>store as it were in hex format</li>
+<li>storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark</li>
+<li>incompatible of old ASCII related</li>
+</ul>
+</li>
+<li><strong>UTF-8</strong>, Unicode Transformation Formats
+<ul>
+<li>every code point from 0-127 is stored in a single byte, compatible with ASCII</li>
+<li>Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes</li>
+</ul>
+</li>
+<li><strong>UCS-4</strong>
+<ul>
+<li>UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes,</li>
+<li>wastes memory</li>
+</ul>
+</li>
+<li><strong>UTF-7</strong>, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough,</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>http header Content-type</p>
+<ul>
+<li>preserve this information about what encoding a string uses</li>
+</ul>
+</li>
+<li>
+<p>html meta tag</p>
+</li>
+</ul>
+<h2 id="go">Go<a hidden class="anchor" aria-hidden="true" href="#go">#</a></h2>
+<ul>
+<li>
+<p>String, a <em>read-only</em> <em>slice of bytes</em></p>
+<ul>
+<li>it does not concern about encodings at all</li>
+<li>Go uses UTF-8 as default encoding
+<ul>
+<li>only string literals are UTF-8, as long as they have no byte-level escapes</li>
+<li>string value, as a slice of bytes, could contain any bytes</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>inspect a string means indexing a string <em>accesses individual bytes</em>, not characters</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// string contains an immutable of bytes, each byte is provided in hex
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sample</span> = <span style="color:#e6db74">&#34;\xbd\xb2\x3d\xbc\x20\xe2\x8c\x98&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// print out the string using default utf-8 would have weird characters since no unicode is mapped for those bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">sample</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// inspect the string byte by byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">sample</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%x &#34;</span>, <span style="color:#a6e22e">sample</span>[<span style="color:#a6e22e">i</span>])
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// bd b2 3d bc 20 e2 8c 98
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// print it with specified format
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%x\n&#34;</span>, <span style="color:#a6e22e">sample</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// bdb23dbc20e28c98
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// %q (quoted) verb will escape any non-printable byte sequences in a string so the output is unambiguous
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// only correct unicode would be displayed, otherwise original hex is displayed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%q\n&#34;</span>, <span style="color:#a6e22e">sample</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// \xbd\xb2=\xbc ⌘
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// %+q causes the output to escape not only non-printable sequences, but also any non-ASCII bytes, all while interpreting UTF-8
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  exposes the Unicode values of properly formatted UTF-8 that represents non-ASCII data 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%+q\n&#34;</span>, <span style="color:#a6e22e">sample</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// \xbd\xb2=\xbc \u2318
+</span></span></span></code></pre></div><h3 id="code-point-characters-runes">Code point, characters, runes<a hidden class="anchor" aria-hidden="true" href="#code-point-characters-runes">#</a></h3>
+<p>a <strong>character</strong>(such as à) may be represented by a number of different <em>sequences</em> of <strong>code points</strong>, and therefore different sequences of UTF-8 bytes.
+For example we can use the &ldquo;combining&rdquo; grave accent code point, U+0300, and attach it to the lower case letter a, U+0061, to create the same character à.
+<strong>rune</strong> as an alias for the type int32, so programs can be clear when an integer value represents a code point.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//  A for range loop, by contrast, decodes one UTF-8-encoded rune on each iteration
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Each time around the loop, the index of the loop is the starting position of the current rune, measured in bytes, and the code point is its value. 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">nihongo</span> = <span style="color:#e6db74">&#34;日本語&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">index</span>, <span style="color:#a6e22e">runeValue</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">nihongo</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%#U starts at byte position %d\n&#34;</span>, <span style="color:#a6e22e">runeValue</span>, <span style="color:#a6e22e">index</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// U+65E5 &#39;日&#39; starts at byte position 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// U+672C &#39;本&#39; starts at byte position 3
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// U+8A9E &#39;語&#39; starts at byte position 6
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// loop while validating each rune
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">nihongo</span> = <span style="color:#e6db74">&#34;日本語&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">w</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nihongo</span>); <span style="color:#a6e22e">i</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">w</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">runeValue</span>, <span style="color:#a6e22e">width</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">utf8</span>.<span style="color:#a6e22e">DecodeRuneInString</span>(<span style="color:#a6e22e">nihongo</span>[<span style="color:#a6e22e">i</span>:])
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%#U starts at byte position %d\n&#34;</span>, <span style="color:#a6e22e">runeValue</span>, <span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">w</span> = <span style="color:#a6e22e">width</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://tacticalmixtu.github.io/tags/golang/">Golang</a></li>
+      <li><a href="https://tacticalmixtu.github.io/tags/utf-8/">UTF-8</a></li>
+      <li><a href="https://tacticalmixtu.github.io/tags/encoding/">Encoding</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© <a href="https://github.com/adityatelange/hugo-PaperMod/graphs/contributors">PaperMod Contributors</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

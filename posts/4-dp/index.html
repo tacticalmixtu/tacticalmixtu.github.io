@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dynamic Programming | my blog</title>
+<meta name="keywords" content="Algorithms">
+<meta name="description" content="What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)">
+<meta name="author" content="">
+<link rel="canonical" href="https://tacticalmixtu.github.io/posts/4-dp/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://tacticalmixtu.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tacticalmixtu.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tacticalmixtu.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://tacticalmixtu.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://tacticalmixtu.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://tacticalmixtu.github.io/posts/4-dp/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  
+
+<meta property="og:title" content="Dynamic Programming" />
+<meta property="og:description" content="What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tacticalmixtu.github.io/posts/4-dp/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-08-31T17:47:02-04:00" />
+<meta property="article:modified_time" content="2020-08-31T17:47:02-04:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Dynamic Programming"/>
+<meta name="twitter:description" content="What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://tacticalmixtu.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dynamic Programming",
+      "item": "https://tacticalmixtu.github.io/posts/4-dp/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dynamic Programming",
+  "name": "Dynamic Programming",
+  "description": "What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)",
+  "keywords": [
+    "Algorithms"
+  ],
+  "articleBody": "What is dynamic programming Two properties optimal sub-structure an optimal solution to the problem could be built from optimal solutions to sub-problems overlapping sub-problems, could be avoided by memorization How to solve dynamic programming problem Define problem: from states conclude problem definition for each states that would vary among sub-problems, define a corresponding parameter for recursion function Define recurrence relationship: from choices conclude recurrence relationship from optimal sub-structure, constructs recurrence relationship consider what choice could be made how do states change due to this choice Define memorization each parameter in recursive function becomes a dimension in dp table, dp(i) becomes dp[i] Bottom-up implementation consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1] Optional: there might be cases when we could reuse one dimension to decrease space complexity One-dimensional problems Longest increasing sub-sequence Knapsack Normal Knapsack(with repetition)\nFor a knapsack with capacity of 10, items(weight, value) are: (6, $30), (3, $14), (4, $16), (2, $9) Define problem:\n$K(w)$: maximum value achievable with a knapsack of capacity w Sub-problem:\n$K(w) = max{K(w-w_i)+v_i}$, for each $w_i",
+  "wordCount" : "738",
+  "inLanguage": "en",
+  "datePublished": "2020-08-31T17:47:02-04:00",
+  "dateModified": "2020-08-31T17:47:02-04:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tacticalmixtu.github.io/posts/4-dp/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "my blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tacticalmixtu.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://tacticalmixtu.github.io/" accesskey="h" title="my blog (Alt + H)">my blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dynamic Programming
+    </h1>
+    <div class="post-meta"><span title='2020-08-31 17:47:02 -0400 -0400'>August 31, 2020</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="what-is-dynamic-programming">What is dynamic programming<a hidden class="anchor" aria-hidden="true" href="#what-is-dynamic-programming">#</a></h2>
+<ul>
+<li>Two properties
+<ul>
+<li><strong>optimal sub-structure</strong>
+<ul>
+<li>an optimal solution to the problem could be <em>built from</em> optimal solutions to sub-problems</li>
+</ul>
+</li>
+<li><strong>overlapping sub-problems</strong>, could be <em>avoided</em> by <strong>memorization</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="how-to-solve-dynamic-programming-problem">How to solve dynamic programming problem<a hidden class="anchor" aria-hidden="true" href="#how-to-solve-dynamic-programming-problem">#</a></h2>
+<ul>
+<li>Define problem: from <strong>states</strong> conclude <strong>problem definition</strong>
+<ul>
+<li>for each <strong>states</strong> that would vary among sub-problems, define a corresponding <strong>parameter</strong> for recursion function</li>
+</ul>
+</li>
+<li>Define recurrence relationship: from <strong>choices</strong> conclude <strong>recurrence relationship</strong>
+<ul>
+<li>from <strong>optimal sub-structure</strong>, constructs <strong>recurrence relationship</strong></li>
+<li>consider
+<ul>
+<li>what <strong>choice</strong> could be made</li>
+<li>how do <strong>states change</strong> due to this choice</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Define memorization
+<ul>
+<li>each <strong>parameter</strong> in recursive function becomes a <strong>dimension</strong> in dp table, dp(i) becomes dp[i]</li>
+</ul>
+</li>
+<li>Bottom-up implementation
+<ul>
+<li>consider dependency relationship in dp table: in order to compute dp[i], it relies on dp[i-1]</li>
+<li>Optional: there might be cases when we could reuse one dimension to decrease space complexity</li>
+</ul>
+</li>
+</ul>
+<h2 id="one-dimensional-problems">One-dimensional problems<a hidden class="anchor" aria-hidden="true" href="#one-dimensional-problems">#</a></h2>
+<h3 id="longest-increasing-sub-sequence">Longest increasing sub-sequence<a hidden class="anchor" aria-hidden="true" href="#longest-increasing-sub-sequence">#</a></h3>
+<h3 id="knapsack">Knapsack<a hidden class="anchor" aria-hidden="true" href="#knapsack">#</a></h3>
+<ul>
+<li>
+<p>Normal Knapsack(with repetition)</p>
+<ul>
+<li>For a knapsack with capacity of 10, items(weight, value) are: (6, $30), (3, $14), (4, $16), (2, $9)</li>
+</ul>
+</li>
+<li>
+<p>Define problem:</p>
+<ul>
+<li>$K(w)$: maximum value achievable with a knapsack of capacity w</li>
+</ul>
+</li>
+<li>
+<p>Sub-problem:</p>
+<ul>
+<li>$K(w) =  max{K(w-w_i)+v_i}$, for each $w_i&lt;w$</li>
+</ul>
+</li>
+<li>
+<p>Find out repeated computation, use memorization to avoid, <em>complete recursion tree is not fully revealed</em></p>
+<ul>
+<li>K(10)
+<ul>
+<li>K(10-6) + 30
+<ul>
+<li>K(4-3) + 14 + 30</li>
+<li>K(4-2) + 9 + 30
+<ul>
+<li>K(2-2) + 9 + 9 + 30</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>K(10-3) + 14
+<ul>
+<li>K(7-6) + 30 + 14</li>
+<li>K(7-4) + 16 + 14</li>
+<li>K(7-3) + 14 + 14</li>
+<li>K(7-2) + 9 + 14
+<ul>
+<li>K(5-4) + &hellip;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>K(10-4)&hellip;</li>
+<li>K(10-2)&hellip;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Implementation:</p>
+<ul>
+<li>compute from K(1) up to K(w) for a given w; Since K(w) only relies on $K(w_i)$ that have been computed before $K(w)$</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">values</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">40</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">70</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">weights</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">knapsack</span>(<span style="color:#ae81ff">8</span>, <span style="color:#a6e22e">values</span>, <span style="color:#a6e22e">weights</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Output: for capacity 8, use one item of weight 3 and the other of weight 5
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 110
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">knapsack</span>(<span style="color:#a6e22e">w</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">values</span>, <span style="color:#a6e22e">weights</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">table</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">choice</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">table</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// localMax := table[i-1]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">values</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">weight</span>, <span style="color:#a6e22e">value</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">weights</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">values</span>[<span style="color:#a6e22e">j</span>]
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">weight</span> &gt; <span style="color:#a6e22e">i</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>] &lt; <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#a6e22e">weight</span>]<span style="color:#f92672">+</span><span style="color:#a6e22e">value</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#a6e22e">weight</span>] <span style="color:#f92672">+</span> <span style="color:#a6e22e">value</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">choice</span>[<span style="color:#a6e22e">i</span>] = append(<span style="color:#a6e22e">choice</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">weight</span>)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">choice</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">w</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><a href="">0-1 Knapsack</a></li>
+</ul>
+<h3 id="coin-change">Coin change<a hidden class="anchor" aria-hidden="true" href="#coin-change">#</a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/coin-change/">322. Coin change</a>
+<ul>
+<li>Define problem: it requires <em>at least</em> dp(i) coins to to constitute total amount of i</li>
+<li>Define recurrence relationship: $dp(i) = min{dp(i-c)+1,c&lt;=i}$, c is the coin value</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">coinChange</span>(<span style="color:#a6e22e">coins</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">coins</span>) &lt; <span style="color:#ae81ff">1</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">amount</span> &lt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">table</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">amount</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// base case
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">table</span>[<span style="color:#ae81ff">0</span>] = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// initialize as maximum value, for this problem, should be amount+1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">table</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">amount</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">table</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">coin</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">coins</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">coin</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>] &gt; <span style="color:#ae81ff">1</span><span style="color:#f92672">+</span><span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#a6e22e">coin</span>] {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#a6e22e">coin</span>]
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// check if there&#39;s a valid solution
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">amount</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">amount</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">amount</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><a href="https://leetcode-cn.com/problems/coin-change-2/">518. Coin change 2</a>
+<ul>
+<li>from <strong>states</strong> conclude <strong>problem definition</strong>:
+<ul>
+<li><strong>states</strong>
+<ul>
+<li>which coins are selected</li>
+<li>current amount that could be constituted</li>
+</ul>
+</li>
+<li><strong>problem definition</strong>: there are $dp(i,j)$ combinations that use only <em>first</em> $i$ coins could constitute amount of $j$</li>
+</ul>
+</li>
+<li>from <strong>choices</strong> conclude <strong>recurrence relationship</strong>:
+<ul>
+<li><strong>choice</strong>
+<ul>
+<li>select coin of value $c$: $dp(i,j) = dp(i,j-c)$, only when $c&lt;=j$</li>
+<li>does not select current coin: $dp(i,j)=dp(i-1,j)$</li>
+</ul>
+</li>
+<li><strong>recurrence relationship</strong>: we want all possible combinations, therefore $dp(i,j)=dp(i,j-c)+dp(i-1,j)$, for each $c&lt;=j$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">change</span>(<span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">coins</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">table</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">coins</span>)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">:=</span><span style="color:#66d9ef">range</span> <span style="color:#a6e22e">table</span>{
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>] = make([]<span style="color:#66d9ef">int</span>,<span style="color:#a6e22e">amount</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// initialize all dp[i][0] since for amount=0, only 1 solution is there
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>][<span style="color:#ae81ff">0</span>] = <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// for dp[0][j] all should be 0, since no coins are there to provide a combination
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">:=</span><span style="color:#ae81ff">1</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;=</span>len(<span style="color:#a6e22e">coins</span>);<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>{
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span><span style="color:#ae81ff">1</span>;<span style="color:#a6e22e">j</span><span style="color:#f92672">&lt;=</span><span style="color:#a6e22e">amount</span>;<span style="color:#a6e22e">j</span><span style="color:#f92672">++</span>{
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">coins</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">j</span>{
+</span></span><span style="display:flex;"><span>              <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>][<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>][<span style="color:#a6e22e">j</span><span style="color:#f92672">-</span><span style="color:#a6e22e">coins</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]] <span style="color:#f92672">+</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>][<span style="color:#a6e22e">j</span>]
+</span></span><span style="display:flex;"><span>          }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>              <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span>][<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>][<span style="color:#a6e22e">j</span>]
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">table</span>[len(<span style="color:#a6e22e">coins</span>)][<span style="color:#a6e22e">amount</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><em>State space reduction</em>:
+<ul>
+<li>since $dp(i,<em>)$ only relies on $dp(i-1,</em>)$</li>
+<li>therefore dimension of $i$ could be reused</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">change</span>(<span style="color:#a6e22e">amount</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">coins</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">table</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">amount</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">table</span>[<span style="color:#ae81ff">0</span>] = <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">coins</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">amount</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// table[i][j] would automatically be table[i-1][j] if c&lt;=j, no update would be performed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">coins</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">j</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">j</span>] <span style="color:#f92672">+=</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">j</span><span style="color:#f92672">-</span><span style="color:#a6e22e">coins</span>[<span style="color:#a6e22e">i</span>]]
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">table</span>[<span style="color:#a6e22e">amount</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="best-time-to-buy-stocks">Best time to buy stocks<a hidden class="anchor" aria-hidden="true" href="#best-time-to-buy-stocks">#</a></h3>
+<h3 id="house-robber">House robber<a hidden class="anchor" aria-hidden="true" href="#house-robber">#</a></h3>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://tacticalmixtu.github.io/tags/algorithms/">Algorithms</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© <a href="https://github.com/adityatelange/hugo-PaperMod/graphs/contributors">PaperMod Contributors</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

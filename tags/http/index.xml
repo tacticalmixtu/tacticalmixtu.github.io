@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Http on my blog</title>
+    <link>https://tacticalmixtu.github.io/tags/http/</link>
+    <description>Recent content in Http on my blog</description>
+    <generator>Hugo -- 0.125.6</generator>
+    <language>en-us</language>
+    <copyright>PaperMod Contributors</copyright>
+    <lastBuildDate>Tue, 16 Feb 2021 11:32:41 +0800</lastBuildDate>
+    <atom:link href="https://tacticalmixtu.github.io/tags/http/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Handlers and Multiplexers in http package</title>
+      <link>https://tacticalmixtu.github.io/posts/10-handle_http/</link>
+      <pubDate>Tue, 16 Feb 2021 11:32:41 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/10-handle_http/</guid>
+      <description>This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.
+Start a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt.</description>
+    </item>
+  </channel>
+</rss>

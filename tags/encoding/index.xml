@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Encoding on my blog</title>
+    <link>https://tacticalmixtu.github.io/tags/encoding/</link>
+    <description>Recent content in Encoding on my blog</description>
+    <generator>Hugo -- 0.125.6</generator>
+    <language>en-us</language>
+    <copyright>PaperMod Contributors</copyright>
+    <lastBuildDate>Thu, 22 Apr 2021 23:46:13 +0800</lastBuildDate>
+    <atom:link href="https://tacticalmixtu.github.io/tags/encoding/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>11 Byte_rune_string</title>
+      <link>https://tacticalmixtu.github.io/posts/11-byte_rune_string/</link>
+      <pubDate>Thu, 22 Apr 2021 23:46:13 +0800</pubDate>
+      <guid>https://tacticalmixtu.github.io/posts/11-byte_rune_string/</guid>
+      <description>Introduction A little history ASCII
+represents English characters and some other control characters only 8 bits only 7 bits are defined in standard unprintable characters are below 32 codes from 128 to 255 are defined in a variety of way by different manufactures, these different systems were called code pages asian language include more characters that exceed the limit of 8 bits Unicode
+a single character set that included every reasonable writing system a letter maps to something called a code point, U+0639 code point points to a concept, which may represents more characters Encodings define how to store these code points store-it-in-two-byte methods are called UCS-2 (because it has two bytes) or UTF-16 (because it has 16 bits) store as it were in hex format storing a FE FF at the beginning of every Unicode string; this is called a Unicode Byte Order Mark incompatible of old ASCII related UTF-8, Unicode Transformation Formats every code point from 0-127 is stored in a single byte, compatible with ASCII Only code points 128 and above are stored using 2, 3, in fact, up to 6 bytes UCS-4 UCS-4, which stores each code point in 4 bytes, which has the nice property that every single code point can be stored in the same number of bytes, wastes memory UTF-7, which is a lot like UTF-8 but guarantees that the high bit will always be zero, so that if you have to pass Unicode through some kind of draconian police-state email system that thinks 7 bits are quite enough, http header Content-type</description>
+    </item>
+  </channel>
+</rss>

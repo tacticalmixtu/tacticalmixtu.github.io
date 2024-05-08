@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Handlers and Multiplexers in http package | my blog</title>
+<meta name="keywords" content="Golang, http">
+<meta name="description" content="This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.
+Start a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt.">
+<meta name="author" content="">
+<link rel="canonical" href="https://tacticalmixtu.github.io/posts/10-handle_http/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://tacticalmixtu.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tacticalmixtu.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tacticalmixtu.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://tacticalmixtu.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://tacticalmixtu.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://tacticalmixtu.github.io/posts/10-handle_http/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  
+
+<meta property="og:title" content="Handlers and Multiplexers in http package" />
+<meta property="og:description" content="This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.
+Start a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tacticalmixtu.github.io/posts/10-handle_http/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-02-16T11:32:41+08:00" />
+<meta property="article:modified_time" content="2021-02-16T11:32:41+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Handlers and Multiplexers in http package"/>
+<meta name="twitter:description" content="This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.
+Start a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://tacticalmixtu.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Handlers and Multiplexers in http package",
+      "item": "https://tacticalmixtu.github.io/posts/10-handle_http/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Handlers and Multiplexers in http package",
+  "name": "Handlers and Multiplexers in http package",
+  "description": "This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.\nStart a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt.",
+  "keywords": [
+    "Golang", "http"
+  ],
+  "articleBody": "This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.\nStart a http server http.ListenAndServe(address string, h Handler) error if handler is nil, then DefaultServeMux is used TCP keep-alive is enabled for each incoming connection, a go routine is created, therefore access control should be applied manually Handler and Multiplexer Handler is an interface type Handler interface { ServeHTTP(ResponseWriter, *Request) } type dollars float32 // satisfy stringer interface func (d dollars) String() string { return fmt.Sprintf(\"%.2f\", d) } // here, database data type is a handler type database map[string]dollars func (db database) ServeHTTP(w http.ResponseWriter, r *http.Request) { switch r.URL.Path { case \"/list\": for item, price := range db { fmt.Fprintf(w, \"%s: %s\\n\", item, price) } case \"/price\": // retrieve vale from key=value pair in url query item := r.URL.Query().Get(\"item\") price, ok := db[item] if !ok { w.WriteHeader(http.StatusNotFound) fmt.Fprintf(w, \"no such item: %q\\n\", item) return } fmt.Fprintf(w, \"%s\\n\", price) default: // header must be written before body w.WriteHeader(http.StatusNotFound) fmt.Fprintf(w, \"no such page: %s\\n\", r.URL) // same as http.Error() // msg := fmt.Sprintf(\"no such page: %s\\n\", r.URL) // http.Error(w, msg, http.StatusNotFound) } } func main() { db := database{\"shoes\": 50, \"socks\": 5} http.ListenAndServe(\"localhost:6688\", db)) } HandlerFunc a function type that implements Handler interface wraps a function into a handler type HandlerFunc func(w ResponseWriter, r *Request) // method on this function type func(f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request){ // ... } ServerMux a request multiplexer simplify association between URLs and handlers aggregate a collection of http.Handler into a single http.Handler provides Handle() method provides HandleFunc() method, convenient func (mux *ServeMux) Handle(pattern string, handler Handler) func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request)) func (db database) list(w http.ResponseWriter, r *http.Request) { for item, price := range db { fmt.Fprintf(w, \"%s: %s\\n\", item, price) } } func (db database) price(w http.ResponseWriter, r *http.Request) { item := r.URL.Query().Get(\"item\") price, ok := db[item] if !ok { // http.ResponseWriter is an interface including io.Writer w.WriteHeader(http.StatusNotFound) fmt.Fprintf(w, \"no such item: %q\\n\", item) return } fmt.Fprintf(w, \"%s\\n\", price) } func main() { db := database{\"shoes\": 50, \"socks\": 5} mux := http.NewServeMux() // wrap normal functions as handlers mux.Handle(\"/list\", http.HandlerFunc(db.list)) // more convenient way mux.HandleFunc(\"/price\", db.price) http.ListenAndServe(\"localhost:6688\", mux) } DefaultServeMux, implicitly used by http package func main(){ http.Handle(\"/list\", http.HandlerFunc(db.list)) http.HandleFunc(\"/price\", db.price) http.ListenAndServe(\"localhost:6688\", nil) } References 7.7 The http.Handler Interface in GOPL docs of http package source code of http package ",
+  "wordCount" : "402",
+  "inLanguage": "en",
+  "datePublished": "2021-02-16T11:32:41+08:00",
+  "dateModified": "2021-02-16T11:32:41+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tacticalmixtu.github.io/posts/10-handle_http/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "my blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tacticalmixtu.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://tacticalmixtu.github.io/" accesskey="h" title="my blog (Alt + H)">my blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Handlers and Multiplexers in http package
+    </h1>
+    <div class="post-meta"><span title='2021-02-16 11:32:41 +0800 CST'>February 16, 2021</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>This article introduces common types/methods in http package to start a http server. It clarifies some confusing points in a rather superficial way.</p>
+<h2 id="start-a-http-server">Start a http server<a hidden class="anchor" aria-hidden="true" href="#start-a-http-server">#</a></h2>
+<ul>
+<li><code>http.ListenAndServe(address string, h Handler) error</code>
+<ul>
+<li>if handler is nil, then <em>DefaultServeMux</em> is used</li>
+<li>TCP keep-alive is enabled</li>
+<li>for each incoming connection, a go routine is created, therefore access control should be applied manually</li>
+</ul>
+</li>
+</ul>
+<h2 id="handler-and-multiplexer">Handler and Multiplexer<a hidden class="anchor" aria-hidden="true" href="#handler-and-multiplexer">#</a></h2>
+<ul>
+<li><strong>Handler</strong> is an <em>interface</em></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Handler</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ServeHTTP</span>(<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">Request</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">dollars</span> <span style="color:#66d9ef">float32</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// satisfy stringer interface
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#a6e22e">dollars</span>) <span style="color:#a6e22e">String</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%.2f&#34;</span>, <span style="color:#a6e22e">d</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// here, database data type is a handler
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">database</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#a6e22e">dollars</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">db</span> <span style="color:#a6e22e">database</span>) <span style="color:#a6e22e">ServeHTTP</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Path</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;/list&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">price</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">db</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;%s: %s\n&#34;</span>, <span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">price</span>)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;/price&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// retrieve vale from key=value pair in url query
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">item</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Query</span>().<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;item&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">price</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">db</span>[<span style="color:#a6e22e">item</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">WriteHeader</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusNotFound</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;no such item: %q\n&#34;</span>, <span style="color:#a6e22e">item</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;%s\n&#34;</span>, <span style="color:#a6e22e">price</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// header must be written before body
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">WriteHeader</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusNotFound</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;no such page: %s\n&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// same as http.Error()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// msg := fmt.Sprintf(&#34;no such page: %s\n&#34;, r.URL)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// http.Error(w, msg, http.StatusNotFound)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">db</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">database</span>{<span style="color:#e6db74">&#34;shoes&#34;</span>: <span style="color:#ae81ff">50</span>, <span style="color:#e6db74">&#34;socks&#34;</span>: <span style="color:#ae81ff">5</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;localhost:6688&#34;</span>, <span style="color:#a6e22e">db</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>HandlerFunc</strong>
+<ul>
+<li>a <em>function type</em> that implements Handler interface</li>
+<li><em>wraps</em> a function into a handler</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">HandlerFunc</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Request</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// method on this function type
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">f</span> <span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">ServeHTTP</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Request</span>){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li><strong>ServerMux</strong>
+<ul>
+<li>a request multiplexer</li>
+<li>simplify association between URLs and handlers</li>
+<li>aggregate a collection of http.Handler into a single http.Handler</li>
+<li>provides <strong>Handle()</strong> method</li>
+<li>provides <strong>HandleFunc()</strong> method, convenient</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mux</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ServeMux</span>) <span style="color:#a6e22e">Handle</span>(<span style="color:#a6e22e">pattern</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">handler</span> <span style="color:#a6e22e">Handler</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mux</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ServeMux</span>) <span style="color:#a6e22e">HandleFunc</span>(<span style="color:#a6e22e">pattern</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">Request</span>))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">db</span> <span style="color:#a6e22e">database</span>) <span style="color:#a6e22e">list</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">price</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">db</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;%s: %s\n&#34;</span>, <span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">price</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">db</span> <span style="color:#a6e22e">database</span>) <span style="color:#a6e22e">price</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">item</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Query</span>().<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;item&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">price</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">db</span>[<span style="color:#a6e22e">item</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// http.ResponseWriter is an interface including io.Writer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">WriteHeader</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusNotFound</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;no such item: %q\n&#34;</span>, <span style="color:#a6e22e">item</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;%s\n&#34;</span>, <span style="color:#a6e22e">price</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">db</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">database</span>{<span style="color:#e6db74">&#34;shoes&#34;</span>: <span style="color:#ae81ff">50</span>, <span style="color:#e6db74">&#34;socks&#34;</span>: <span style="color:#ae81ff">5</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mux</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">NewServeMux</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// wrap normal functions as handlers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">mux</span>.<span style="color:#a6e22e">Handle</span>(<span style="color:#e6db74">&#34;/list&#34;</span>, <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>(<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">list</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// more convenient way
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">mux</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/price&#34;</span>, <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">price</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;localhost:6688&#34;</span>, <span style="color:#a6e22e">mux</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>DefaultServeMux</strong>, implicitly used by http package</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Handle</span>(<span style="color:#e6db74">&#34;/list&#34;</span>, <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandlerFunc</span>(<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">list</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/price&#34;</span>, <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">price</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;localhost:6688&#34;</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ul>
+<li>7.7 The http.Handler Interface in GOPL</li>
+<li><a href="https://pkg.go.dev/net/http">docs of http package</a></li>
+<li><a href="https://go.googlesource.com/go/+/go1.16/src/net/http">source code of http package</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://tacticalmixtu.github.io/tags/golang/">Golang</a></li>
+      <li><a href="https://tacticalmixtu.github.io/tags/http/">Http</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© <a href="https://github.com/adityatelange/hugo-PaperMod/graphs/contributors">PaperMod Contributors</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
